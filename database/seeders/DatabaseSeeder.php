@@ -15,7 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Admin portal — hanya akun ini yang boleh masuk /admin/login
+        User::factory()->admin()->create([
+            'name' => 'Admin OmniSync',
+            'email' => 'admin@gmail.com',
+        ]);
 
         User::factory()->create([
             'name' => 'Test User',

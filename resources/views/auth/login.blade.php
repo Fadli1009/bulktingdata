@@ -64,6 +64,9 @@
             <p class="text-center text-xs text-slate-500 mt-4">
                 Tidak punya akun? Daftar dengan email atau Google di atas
             </p>
+            <p class="text-center text-xs text-slate-500 mt-2">
+                Admin? <a href="{{ route('admin.login') }}" class="font-semibold text-blue-600 hover:text-blue-700">Masuk Portal Admin</a>
+            </p>
         </div>
 
         <div x-show="step === 'otp'" x-transition class="space-y-4">

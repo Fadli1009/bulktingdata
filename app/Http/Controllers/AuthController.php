@@ -20,15 +20,37 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request): RedirectResponse
     {
+        $request->session()->put('auth_intent', 'user');
+
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback(): RedirectResponse
+    public function handleGoogleCallback(Request $request): RedirectResponse
     {
+        $intent = $request->session()->pull('auth_intent', 'user');
+
         try {
             $googleUser = Socialite::driver('google')->user();
+
+            if ($intent === 'admin') {
+                $admin = User::where('email', $googleUser->email)->where('is_admin', true)->first();
+
+                if (! $admin) {
+                    return redirect()->route('admin.login')->with('error', 'Akun Google ini tidak terdaftar sebagai admin.');
+                }
+
+                $admin->update([
+                    'google_id' => $googleUser->id,
+                    'avatar' => $googleUser->avatar,
+                    'email_verified_at' => now(),
+                ]);
+
+                Auth::login($admin);
+
+                return redirect('/admin');
+            }
 
             $user = User::updateOrCreate(
                 ['google_id' => $googleUser->id],
@@ -42,11 +64,13 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return $this->redirectAfterAuth($user);
+            return redirect('/');
         } catch (\Throwable $e) {
             report($e);
 
-            return redirect()->route('login')->with('error', 'Gagal masuk dengan Google. Silakan coba lagi.');
+            $route = $intent === 'admin' ? 'admin.login' : 'login';
+
+            return redirect()->route($route)->with('error', 'Gagal masuk dengan Google. Silakan coba lagi.');
         }
     }
 
@@ -91,7 +115,7 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return $this->redirectAfterAuth($user);
+            return $this->redirectAfterAuth($user, $request);
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
@@ -162,15 +186,13 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    protected function redirectAfterAuth(User $user): RedirectResponse
+    protected function redirectAfterAuth(User $user, Request $request): RedirectResponse
     {
-        // if (! $user->hasChosenAccountType()) {
-        //     return redirect()->route('account.type');
-        // }
+        $intent = $request->session()->pull('auth_intent', 'user');
 
-        // if (! $user->hasCompletedProfile()) {
-        //     return redirect()->route('account.complete');
-        // }
+        if ($intent === 'admin') {
+            return redirect('/admin');
+        }
 
         return redirect('/');
     }

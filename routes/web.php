@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -25,14 +26,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::middleware(['auth', 'account.setup'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/customers/create', [AdminController::class, 'customerCreate'])->name('customers.create');
-    Route::get('/customers', [AdminController::class, 'customers'])->name('customers.index');
-    Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
-    Route::get('/packages', [AdminController::class, 'packages'])->name('packages.index');
-    Route::get('/faqs', [AdminController::class, 'faqs'])->name('faqs.index');
-    Route::get('/uploads', [AdminController::class, 'uploads'])->name('uploads.index');
-    Route::get('/logs', [AdminController::class, 'logs'])->name('logs.index');
-    Route::get('/login', [AdminController::class, 'login'])->name('auth.login');
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin authentication cuma tamu doang (tidak login)
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
+        Route::get('/auth/google/redirect', [AdminAuthController::class, 'redirectToGoogle'])->name('auth.google');
+        Route::post('/auth/otp/send', [AdminAuthController::class, 'sendOtp'])->middleware('throttle:6,1')->name('auth.otp.send');
+        Route::post('/auth/otp/verify', [AdminAuthController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('auth.otp.verify');
+    });
+
+    // Admin area yang udah login
+    Route::middleware(['auth', 'is_admin'])->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/customers/create', [AdminController::class, 'customerCreate'])->name('customers.create');
+        Route::get('/customers', [AdminController::class, 'customers'])->name('customers.index');
+        Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
+        Route::get('/packages', [AdminController::class, 'packages'])->name('packages.index');
+        Route::get('/faqs', [AdminController::class, 'faqs'])->name('faqs.index');
+        Route::get('/uploads', [AdminController::class, 'uploads'])->name('uploads.index');
+        Route::get('/logs', [AdminController::class, 'logs'])->name('logs.index');
+    });
 });

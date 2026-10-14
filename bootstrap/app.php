@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureAccountSetup;
+use App\Http\Middleware\EnsureIsAdmin;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,8 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'account.setup' => \App\Http\Middleware\EnsureAccountSetup::class,
+            'account.setup' => EnsureAccountSetup::class,
+            'is_admin' => EnsureIsAdmin::class,
         ]);
+
+        Authenticate::redirectUsing(fn (Request $request) => $request->is('admin*')
+            ? route('admin.login')
+            : route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
