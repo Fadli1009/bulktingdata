@@ -46,19 +46,19 @@
                                     'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z',
                                     'accent' => 'blue',
                                 ],
-                                'marketplace' => [
-                                    'label' => 'Template Marketplace',
-                                    'hint' => 'Template khusus format marketplace',
-                                    'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9',
-                                    'accent' => 'emerald',
-                                ],
-                                'result' => [
-                                    'label' => 'Template Wadah Hasil',
-                                    'hint' => 'Template untuk menampilkan hasil proses',
-                                    'icon' =>
-                                        'M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6M3 21h18M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14',
-                                    'accent' => 'amber',
-                                ],
+                                // 'marketplace' => [
+                                //     'label' => 'Template Marketplace',
+                                //     'hint' => 'Template khusus format marketplace',
+                                //     'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9',
+                                //     'accent' => 'emerald',
+                                // ],
+                                // 'result' => [
+                                //     'label' => 'Template Wadah Hasil',
+                                //     'hint' => 'Template untuk menampilkan hasil proses',
+                                //     'icon' =>
+                                //         'M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6M3 21h18M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14',
+                                //     'accent' => 'amber',
+                                // ],
                             ];
                             $accentColors = [
                                 'blue' => 'from-blue-500 to-indigo-500 shadow-blue-500/30',

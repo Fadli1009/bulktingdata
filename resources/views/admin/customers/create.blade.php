@@ -58,22 +58,18 @@
                         <p class="mt-1 pl-8 text-xs text-slate-400">Data identitas yang ditampilkan di daftar pelanggan.</p>
                     </div>
                     <div class="space-y-4">
-                        <div>
-                            <x-admin.input label="Nama pelanggan" name="name" id="name" :value="old('name')" required maxlength="150" placeholder="Nama lengkap atau nama usaha" />
-                            <p class="mt-1 text-xs text-slate-400" x-text="($el.previousElementSibling.value.length || 0) + '/150'"></p>
-                        </div>
+                        
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div>
                                 <x-admin.input label="Email" name="email" id="email" type="email" :value="old('email')" required placeholder="nama@contoh.com" autocomplete="email" />
                             </div>
-                            <div>
-                                <x-admin.input label="Nomor telepon" hint="opsional" name="phone" id="phone" :value="old('phone')" inputmode="tel" pattern="[0-9+\- ]*" autocomplete="tel" placeholder="08xxxxxxxxxx" />
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-4 p-6">
+                    
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="grid h-6 w-6 place-items-center rounded-full bg-violet-600 text-[10px] font-bold text-white">2</span>
@@ -81,6 +77,12 @@
                         </div>
                         <p class="mt-1 pl-8 text-xs text-slate-400">Atur status akses dan marketplace yang terhubung.</p>
                     </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <x-admin.input label="No Pesanan" name="order_number" id="order_number" :value="old('order_number')" required placeholder="Masukkan nomor pesanan" />
+                            </div>
+                            
+                        </div>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <x-admin.select label="Status" name="status" id="status" required>
@@ -99,7 +101,7 @@
                         </div>
                     </div>
 
-                    <div
+                    {{-- <div
                         x-cloak
                         x-show="marketplace"
                         x-transition:enter="transition ease-out duration-200"
@@ -123,7 +125,7 @@
                             </div>
                         </div>
                         <p class="mt-3 text-xs text-slate-400">Kosongkan jika toko belum tersedia — bisa diisi nanti di halaman Pelanggan.</p>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 

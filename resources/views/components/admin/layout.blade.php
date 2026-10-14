@@ -6,7 +6,7 @@
             ['dashboard', 'Beranda', '/admin', 'M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10'],
         ],
         'Pelanggan' => [
-            ['customer-create', 'Tambah Pelanggan', '/admin/customers/create', 'M12 5v14M5 12h14'],
+            ['customer-create', 'Tambah Pelanggan Marketplace', '/admin/customers/create', 'M12 5v14M5 12h14'],
             ['customers', 'Data Pelanggan', '/admin/customers', 'M16 11a4 4 0 10-8 0 4 4 0 008 0zM4 20a8 8 0 0116 0'],
         ],
         'Transaksi' => [

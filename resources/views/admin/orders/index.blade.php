@@ -31,7 +31,7 @@
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead class="bg-slate-50/70"><tr>
-                    @foreach (['No. order', 'Pelanggan', 'Paket', 'Tanggal', 'Total', 'Status', 'Ubah status'] as $h)
+                    @foreach (['No. order', 'Pelanggan', 'Paket', 'Orders by', 'Tanggal', 'Total', 'Status', 'Ubah status'] as $h)
                         <x-admin.th>{{ $h }}</x-admin.th>
                     @endforeach
                 </tr></thead>
@@ -41,6 +41,7 @@
                         <x-admin.td class="font-mono font-semibold text-slate-900">{{ $o->order_number }}</x-admin.td>
                         <x-admin.td>{{ $o->customer->name ?? '—' }}</x-admin.td>
                         <x-admin.td>{{ $o->package->name ?? '—' }}</x-admin.td>
+                        <x-admin.td class="whitespace-nowrap text-slate-400">{{ optional($o->ordered_by)->name ?: '—' }}</x-admin.td>
                         <x-admin.td class="whitespace-nowrap text-slate-400">{{ optional($o->ordered_at ?? $o->created_at)->format('d M Y') }}</x-admin.td>
                         <x-admin.td class="whitespace-nowrap font-semibold"><x-admin.currency :value="$o->total ?? null" /></x-admin.td>
                         <x-admin.td><x-admin.badge :status="$o->status" /></x-admin.td>

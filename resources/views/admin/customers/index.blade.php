@@ -28,7 +28,7 @@
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead class="bg-slate-50/70"><tr>
-                    @foreach (['Nama', 'Email', 'Telepon', 'Marketplace', 'Status', 'Dibuat', 'Aksi'] as $h)
+                    @foreach (['Nama', 'Email', 'Telepon', 'Status', 'Dibuat Oleh', 'Aksi'] as $h)
                         <x-admin.th>{{ $h }}</x-admin.th>
                     @endforeach
                 </tr></thead>
@@ -38,7 +38,6 @@
                         <x-admin.td class="font-semibold text-slate-900">{{ $c->name }}</x-admin.td>
                         <x-admin.td>{{ $c->email }}</x-admin.td>
                         <x-admin.td>{{ $c->phone ?: '—' }}</x-admin.td>
-                        <x-admin.td>{{ $c->marketplace ? ucfirst($c->marketplace) : '—' }}</x-admin.td>
                         <x-admin.td><x-admin.badge :status="$c->status" /></x-admin.td>
                         <x-admin.td class="whitespace-nowrap text-slate-400">{{ optional($c->created_at)->format('d M Y') }}</x-admin.td>
                         <x-admin.td>
