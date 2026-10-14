@@ -1,4 +1,4 @@
-<x-admin.layout page="orders">
+<x-admin    .layout page="orders">
     <x-admin.page-header title="Order" subtitle="Pantau dan kelola status order dari pelanggan." />
 
     <x-admin.card>

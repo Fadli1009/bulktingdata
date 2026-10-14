@@ -69,7 +69,6 @@
                 </div>
 
                 <div class="space-y-4 p-6">
-                    
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="grid h-6 w-6 place-items-center rounded-full bg-violet-600 text-[10px] font-bold text-white">2</span>

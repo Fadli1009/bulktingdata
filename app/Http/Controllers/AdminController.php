@@ -45,4 +45,8 @@ class AdminController extends Controller
     {
         return view('admin.logs.index');
     }
+
+    public function login(){
+        return view('admin.auth.login');
+    }
 }

@@ -16,4 +16,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/faqs', [AdminController::class, 'faqs'])->name('faqs.index');
     Route::get('/uploads', [AdminController::class, 'uploads'])->name('uploads.index');
     Route::get('/logs', [AdminController::class, 'logs'])->name('logs.index');
+    Route::get('/login', [AdminController::class, 'login'])->name('auth.login');
 });
