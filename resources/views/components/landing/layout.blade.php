@@ -7,6 +7,7 @@
     <meta name="description" content="Sinkronisasi katalog Tokopedia & Shopee, pencocokan PN bundle otomatis, dan campaign Excel dalam hitungan detik.">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <style>
         .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2, .7, .2, 1), transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0s); }
         .rv.in { opacity: 1; transform: none; }
