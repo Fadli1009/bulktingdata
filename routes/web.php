@@ -4,7 +4,7 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landingpages.index');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
