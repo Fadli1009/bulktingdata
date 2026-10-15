@@ -5,6 +5,8 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,6 +31,24 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Scope a query to only include registered customers (non-admin users).
+     */
+    public function scopeCustomers(Builder $query): void
+    {
+        $query->where('is_admin', false);
+    }
+
+    /**
+     * The customer tracking status derived from onboarding progress.
+     */
+    protected function status(): Attribute
+    {
+        return Attribute::get(
+            fn (): string => $this->hasCompletedProfile() ? 'success' : 'pending',
+        );
     }
 
     public function hasChosenAccountType(): bool
