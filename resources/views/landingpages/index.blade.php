@@ -25,66 +25,6 @@
         ],
     ];
 
-    $plans = [
-        [
-            'Starter Business',
-            'Populer',
-            'Pilihan tepat untuk seller toko tunggal yang ingin menertibkan SKU secara komputer.',
-            1200000,
-            'Ditagih sesuai lisensi pilihan',
-            'CAPAIAN MODUL',
-            [
-                ['1 Toko Marketplace Aktif', 1],
-                ['Hingga 500 SKU Ingestion /bulan', 1],
-                ['1x Campaign Excel Template', 1],
-                ['Pencocokan SKU Standar', 1],
-                ['Dukungan Tiket Email', 1],
-                ['SLA Pelayanan 24 Jam', 0],
-            ],
-            'Pilih Paket Starter',
-            false,
-        ],
-        [
-            'Growth Tier',
-            'Multi-Channel',
-            'Untuk brand berkembang yang aktif mengikuti program campaign flash sale Tokopedia & Shopee.',
-            3850000,
-            'Direkomendasikan untuk 3-5 pengelola',
-            'BANGUN DI STARTER, DITAMBAH',
-            [
-                ['3 Toko Marketplace (Tokopedia & Shopee)', 1],
-                ['Hingga 5.000 SKU Ingestion /bulan', 1],
-                ['Unlimited Campaign Templates', 1],
-                [
-                    'Aturan Bundle PN Otomatis <code class="rounded bg-blue-50 px-1 text-[10px] text-blue-700">{PN}.{VAR}.{INDEX}</code>',
-                    1,
-                ],
-                ['Export Preview & Validasi Stok Real-Time', 1],
-                ['<b>Dukungan Prioritas WhatsApp Langsung</b>', 1],
-            ],
-            'Pilih Paket Growth',
-            true,
-        ],
-        [
-            'Enterprise Pro',
-            'Kustomisasi',
-            'Infrastruktur terdedikasi untuk distributor nasional, principal, dan multi-brand holding.',
-            14500000,
-            'Kustomisasi kuota & investasi kapasitas',
-            'FITUR DEDICATED',
-            [
-                ['Multi-store & Multi-tenant Tanpa Batas', 1],
-                ['Ingestion SKU Tak Terbatas', 1],
-                ['Dedicated Redis Queue & Worker Server', 1],
-                ['Custom Fuzzy Matching & Pricing Rules', 1],
-                ['Custom API & Webhook Laravel Integration', 1],
-                ['Dedicated Account Manager & SLA 99.9%', 1],
-            ],
-            'Hubungi Tim Enterprise',
-            false,
-        ],
-    ];
-
     $trust = [
         [
             'Garansi Keamanan Data',
@@ -136,7 +76,7 @@
     <x-landing.navbar />
     <x-landing.hero />
     <x-landing.steps :steps="$steps" />
-    <x-landing.plans :plans="$plans" :trust="$trust" :register="$register" />
+    <x-landing.plans :plans="$plans ?? []" :trust="$trust" :register="$register" />
     <x-landing.features />
     <x-landing.faq :faqs="$faqs" />
     <x-landing.cta :register="$register" />

@@ -3,11 +3,10 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('landingpages.index');
-});
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -42,6 +41,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/customers', [AdminController::class, 'customers'])->name('customers.index');
         Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
         Route::get('/packages', [AdminController::class, 'packages'])->name('packages.index');
+        Route::post('/packages', [AdminController::class, 'packageStore'])->name('packages.store');
+        Route::put('/packages/{package}', [AdminController::class, 'packageUpdate'])->name('packages.update');
+        Route::patch('/packages/{package}/toggle', [AdminController::class, 'packageToggle'])->name('packages.toggle');
+        Route::delete('/packages/{package}', [AdminController::class, 'packageDestroy'])->name('packages.destroy');
         Route::get('/faqs', [AdminController::class, 'faqs'])->name('faqs.index');
         Route::get('/uploads', [AdminController::class, 'uploads'])->name('uploads.index');
         Route::get('/logs', [AdminController::class, 'logs'])->name('logs.index');

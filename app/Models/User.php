@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'account_type', 'phone', 'profile_completed_at', 'is_admin'])]
+#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'account_type', 'phone', 'profile_completed_at', 'is_admin', 'team_owner_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -74,5 +77,74 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return (bool) $this->is_admin;
+    }
+
+    public function isTeamMember(): bool
+    {
+        return $this->team_owner_id !== null;
+    }
+
+    /**
+     * The account that owns the active subscription (self, or the team owner).
+     */
+    public function subscriptionOwner(): self
+    {
+        return $this->teamOwner ?? $this;
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function teamOwner(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'team_owner_id');
+    }
+
+    /**
+     * @return HasMany<User, $this>
+     */
+    public function teamMembers(): HasMany
+    {
+        return $this->hasMany(self::class, 'team_owner_id');
+    }
+
+    /**
+     * @return HasMany<Subscription, $this>
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * @return HasOne<Subscription, $this>
+     */
+    public function activeSubscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class)->active()->latestOfMany();
+    }
+
+    /**
+     * @return HasMany<Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * @return HasMany<Upload, $this>
+     */
+    public function uploads(): HasMany
+    {
+        return $this->hasMany(Upload::class);
+    }
+
+    /**
+     * @return HasMany<TeamInvitation, $this>
+     */
+    public function teamInvitations(): HasMany
+    {
+        return $this->hasMany(TeamInvitation::class, 'owner_id');
     }
 }
