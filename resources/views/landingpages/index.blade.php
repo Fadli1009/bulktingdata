@@ -1,5 +1,5 @@
 @php
-    $register = url('/register');
+    $register = route('register');
 
     $steps = [
         [
@@ -76,7 +76,7 @@
     <x-landing.navbar />
     <x-landing.hero />
     <x-landing.steps :steps="$steps" />
-    <x-landing.plans :plans="$plans ?? []" :trust="$trust" :register="$register" />
+    <x-landing.plans :plans="$plans ?? []" :trust="$trust" />
     <x-landing.features />
     <x-landing.faq :faqs="$faqs" />
     <x-landing.cta :register="$register" />

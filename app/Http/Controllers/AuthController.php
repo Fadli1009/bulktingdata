@@ -64,7 +64,7 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return redirect('/');
+            return redirect()->intended(route('dashboard'));
         } catch (\Throwable $e) {
             report($e);
 
@@ -150,7 +150,7 @@ class AuthController extends Controller
         }
 
         if ($user->hasCompletedProfile()) {
-            return redirect('/admin');
+            return redirect()->route('dashboard');
         }
 
         $view = $user->isPersonal() ? 'account.complete-personal' : 'account.complete-bisnis';
@@ -174,7 +174,7 @@ class AuthController extends Controller
             'profile_completed_at' => now(),
         ]);
 
-        return redirect('/')->with('success', 'Profil Anda berhasil dilengkapi!');
+        return redirect()->route('dashboard')->with('success', 'Profil Anda berhasil dilengkapi!');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -194,6 +194,6 @@ class AuthController extends Controller
             return redirect('/admin');
         }
 
-        return redirect('/');
+        return redirect()->intended(route('dashboard'));
     }
 }

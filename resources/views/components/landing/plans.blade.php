@@ -22,7 +22,7 @@ $check = $ic('M5 13l4 4L19 7');
             </div>
         @else
             <div class="mt-12 grid items-stretch gap-5 lg:grid-cols-3">
-                @foreach ($plans as $i => [$name, $tag, $desc, $price, $note, $head, $feat, $cta, $hot, $period])
+                @foreach ($plans as $i => [$name, $tag, $desc, $price, $note, $head, $feat, $cta, $hot, $period, $slug])
                     <article class="rv relative flex flex-col rounded-xl p-6 transition hover:-translate-y-1 {{ $hot ? 'border-2 border-blue-600 bg-white shadow-xl shadow-blue-600/10 lg:-mt-3 lg:pb-9' : 'border border-slate-200 bg-white hover:shadow-lg' }}" style="--d:{{ $i * 0.12 }}s">
                         @if ($hot)
                             <span class="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white">PALING DIMINATI / TERLARIS</span>
@@ -46,7 +46,7 @@ $check = $ic('M5 13l4 4L19 7');
                                 </li>
                             @endforeach
                         </ul>
-                        <a href="{{ $register }}?plan={{ \Illuminate\Support\Str::slug($name) }}" class="mt-7 block rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition {{ $hot ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border border-slate-300 text-slate-800 hover:bg-slate-50' }}">{{ $cta }}</a>
+                        <a href="{{ route('checkout.show', $slug) }}" class="mt-7 block rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition {{ $hot ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border border-slate-300 text-slate-800 hover:bg-slate-50' }}">{{ $cta }}</a>
                     </article>
                 @endforeach
             </div>

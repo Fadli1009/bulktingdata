@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -47,4 +48,17 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * Buat user pelanggan (non-admin) yang sudah menyelesaikan onboarding.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function customer(array $attributes = []): User
+{
+    return User::factory()->create(array_merge([
+        'account_type' => 'personal',
+        'profile_completed_at' => now(),
+    ], $attributes));
 }

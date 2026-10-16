@@ -3,16 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BillingPeriod;
+use App\Enums\OrderStatus;
 use App\Enums\PackageType;
+use App\Models\Order;
 use App\Models\Package;
 use App\Models\User;
+use App\Services\PurchaseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminController extends Controller
 {
+    public function __construct(protected PurchaseService $purchaseService) {}
+
     public function dashboard(): View
     {
         $stats = [
@@ -47,9 +55,70 @@ class AdminController extends Controller
         return view('admin.customers.create');
     }
 
-    public function orders(): View
+    public function orders(Request $request): View
     {
-        return view('admin.orders.index');
+        $status = $request->string('status')->toString();
+        $customerId = $request->string('customer_id')->toString();
+
+        $orders = Order::query()
+            ->with(['customer', 'package', 'orderedBy'])
+            ->when($customerId !== '', fn ($query) => $query->where('user_id', $customerId))
+            ->when($status !== '', fn ($query) => $query->where('status', $status))
+            ->when($request->filled('from'), fn ($query) => $query->whereDate('ordered_at', '>=', $request->date('from')))
+            ->when($request->filled('to'), fn ($query) => $query->whereDate('ordered_at', '<=', $request->date('to')))
+            ->latest('ordered_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        $customerOptions = User::query()->customers()->orderBy('name')->get(['id', 'name']);
+
+        $statusLabel = collect(OrderStatus::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()]);
+
+        return view('admin.orders.index', compact('orders', 'customerOptions', 'statusLabel', 'status', 'customerId'));
+    }
+
+    public function orderStatus(Request $request, Order $order): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', Rule::enum(OrderStatus::class)],
+        ]);
+
+        $order->update(['status' => OrderStatus::from($validated['status'])]);
+
+        return back()->with('success', 'Status order berhasil diperbarui.');
+    }
+
+    public function orderConfirm(Order $order): RedirectResponse
+    {
+        try {
+            $this->purchaseService->confirm($order);
+        } catch (ValidationException $e) {
+            return back()->with('error', $e->validator->errors()->first());
+        }
+
+        return back()->with('success', 'Pembayaran dikonfirmasi. Langganan pelanggan telah aktif.');
+    }
+
+    public function orderCancel(Order $order): RedirectResponse
+    {
+        try {
+            $this->purchaseService->cancel($order);
+        } catch (ValidationException $e) {
+            return back()->with('error', $e->validator->errors()->first());
+        }
+
+        return back()->with('success', 'Order berhasil dibatalkan.');
+    }
+
+    public function orderProof(Order $order): StreamedResponse
+    {
+        abort_unless($order->payment_proof_path, 404);
+
+        $disk = config('payments.proof_disk', 'local');
+
+        abort_unless(Storage::disk($disk)->exists($order->payment_proof_path), 404);
+
+        return Storage::disk($disk)->download($order->payment_proof_path);
     }
 
     public function packages(Request $request): View

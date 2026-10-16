@@ -31,7 +31,7 @@
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead class="bg-slate-50/70"><tr>
-                    @foreach (['No. order', 'Pelanggan', 'Paket', 'Orders by', 'Tanggal', 'Total', 'Status', 'Ubah status'] as $h)
+                    @foreach (['No. order', 'Pelanggan', 'Paket', 'Orders by', 'Tanggal', 'Total', 'Status', 'Aksi'] as $h)
                         <x-admin.th>{{ $h }}</x-admin.th>
                     @endforeach
                 </tr></thead>
@@ -40,25 +40,33 @@
                     <tr class="transition-colors hover:bg-blue-50/30">
                         <x-admin.td class="font-mono font-semibold text-slate-900">{{ $o->order_number }}</x-admin.td>
                         <x-admin.td>{{ $o->customer->name ?? '—' }}</x-admin.td>
-                        <x-admin.td>{{ $o->package->name ?? '—' }}</x-admin.td>
+                        <x-admin.td>{{ $o->package->name ?? $o->package_name ?? '—' }}</x-admin.td>
                         <x-admin.td class="whitespace-nowrap text-slate-400">{{ optional($o->ordered_by)->name ?: '—' }}</x-admin.td>
                         <x-admin.td class="whitespace-nowrap text-slate-400">{{ optional($o->ordered_at ?? $o->created_at)->format('d M Y') }}</x-admin.td>
                         <x-admin.td class="whitespace-nowrap font-semibold"><x-admin.currency :value="$o->total ?? null" /></x-admin.td>
-                        <x-admin.td><x-admin.badge :status="$o->status" /></x-admin.td>
+                        <x-admin.td><x-admin.badge :status="$o->status->value" /></x-admin.td>
                         <x-admin.td>
-                            <form method="POST" action="{{ url('/admin/orders/'.$o->id.'/status') }}" class="flex gap-1.5">
-                                @csrf @method('PATCH')
-                                <x-admin.select name="status" class="!py-1.5 text-xs">
-                                    @foreach (['pending', 'processing', 'done', 'cancelled'] as $s)
-                                        <option value="{{ $s }}" @selected($o->status === $s)>{{ $statusLabel[$s] ?? $s }}</option>
-                                    @endforeach
-                                </x-admin.select>
-                                <x-admin.button variant="secondary" size="sm" type="submit">Simpan</x-admin.button>
-                            </form>
+                            <div class="flex items-center gap-1.5">
+                                @if ($o->payment_proof_path)
+                                    <x-admin.button variant="secondary" size="sm" :href="route('admin.orders.proof', $o)">Bukti</x-admin.button>
+                                @endif
+                                @if ($o->isPending() || $o->isProcessing())
+                                    <form method="POST" action="{{ route('admin.orders.confirm', $o) }}">
+                                        @csrf
+                                        <x-admin.button variant="primary" size="sm" type="submit">Konfirmasi</x-admin.button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.orders.cancel', $o) }}">
+                                        @csrf
+                                        <x-admin.button variant="danger" size="sm" type="submit">Batal</x-admin.button>
+                                    </form>
+                                @else
+                                    <span class="text-xs text-slate-400">—</span>
+                                @endif
+                            </div>
                         </x-admin.td>
                     </tr>
                 @empty
-                    <tr><td colspan="7"><x-admin.empty-state title="Belum ada order" description="Order akan muncul setelah pelanggan melakukan pembelian." icon="inbox" /></td></tr>
+                    <tr><td colspan="8"><x-admin.empty-state title="Belum ada order" description="Order akan muncul setelah pelanggan melakukan pembelian." icon="inbox" /></td></tr>
                 @endforelse
                 </tbody>
             </table>

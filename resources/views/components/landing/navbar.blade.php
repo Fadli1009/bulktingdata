@@ -39,6 +39,15 @@ $logo = '<span class="grid h-7 w-7 place-items-center rounded-lg bg-blue-600 tex
                         class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-lg border border-slate-200 bg-white shadow-lg"
                         style="display: none;">
                         <div class="py-1">
+                            <a href="{{ route('dashboard') }}"
+                                class="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10" />
+                                </svg>
+                                Dashboard
+                            </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
@@ -79,6 +88,8 @@ $logo = '<span class="grid h-7 w-7 place-items-center rounded-lg bg-blue-600 tex
             <a href="#paket">Paket Harga</a>
             <a href="#faq">FAQ</a>
             @auth
+                <a href="{{ route('dashboard') }}"
+                    class="rounded-md bg-blue-600 px-3 py-2 text-center font-semibold text-white">Buka Dashboard</a>
                 <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
                     <p class="text-xs text-slate-600">Hallo,</p>
                     <p class="mt-0.5 truncate font-semibold text-slate-900" title="{{ auth()->user()->name }}">

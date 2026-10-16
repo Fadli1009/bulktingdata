@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Carbon\CarbonInterface;
+
 enum BillingPeriod: string
 {
     case Monthly = 'monthly';
@@ -12,6 +14,14 @@ enum BillingPeriod: string
         return match ($this) {
             self::Monthly => 'Bulanan',
             self::Yearly => 'Tahunan',
+        };
+    }
+
+    public function addTo(CarbonInterface $date): CarbonInterface
+    {
+        return match ($this) {
+            self::Monthly => $date->copy()->addMonthNoOverflow(),
+            self::Yearly => $date->copy()->addYearNoOverflow(),
         };
     }
 }

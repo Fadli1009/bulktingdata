@@ -3,7 +3,10 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
@@ -25,6 +28,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+Route::middleware(['auth', 'account.setup'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/checkout/{package:slug}', [CheckoutController::class, 'show'])->name('checkout.show');
+    Route::post('/checkout/{package:slug}', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('dashboard.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/proof', [OrderController::class, 'submitProof'])->name('orders.proof');
+    Route::get('/orders/{order}/proof', [OrderController::class, 'downloadProof'])->name('orders.proof.download');
+});
+
 Route::prefix('admin')->name('admin.')->group(function () {
     // Admin authentication cuma tamu doang (tidak login)
     Route::middleware('guest')->group(function () {
@@ -40,6 +55,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/customers/create', [AdminController::class, 'customerCreate'])->name('customers.create');
         Route::get('/customers', [AdminController::class, 'customers'])->name('customers.index');
         Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
+        Route::patch('/orders/{order}/status', [AdminController::class, 'orderStatus'])->name('orders.status');
+        Route::post('/orders/{order}/confirm', [AdminController::class, 'orderConfirm'])->name('orders.confirm');
+        Route::post('/orders/{order}/cancel', [AdminController::class, 'orderCancel'])->name('orders.cancel');
+        Route::get('/orders/{order}/proof', [AdminController::class, 'orderProof'])->name('orders.proof');
         Route::get('/packages', [AdminController::class, 'packages'])->name('packages.index');
         Route::post('/packages', [AdminController::class, 'packageStore'])->name('packages.store');
         Route::put('/packages/{package}', [AdminController::class, 'packageUpdate'])->name('packages.update');

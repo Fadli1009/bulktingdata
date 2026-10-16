@@ -26,7 +26,7 @@ class LandingController extends Controller
     /**
      * Map a package into the tuple consumed by the landing plans component.
      *
-     * @return array{0: string, 1: string, 2: string, 3: int, 4: string, 5: string, 6: array<int, array{0: string, 1: bool}>, 7: string, 8: bool, 9: string}
+     * @return array{0: string, 1: string, 2: string, 3: int, 4: string, 5: string, 6: array<int, array{0: string, 1: bool}>, 7: string, 8: bool, 9: string, 10: string}
      */
     protected function toPlan(Package $package): array
     {
@@ -41,6 +41,7 @@ class LandingController extends Controller
             'Pilih '.$package->name,
             $package->is_featured,
             $package->billing_period === BillingPeriod::Yearly ? 'tahun' : 'bulan',
+            $package->slug,
         ];
     }
 
